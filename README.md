@@ -1,7 +1,7 @@
 
 ##   \<Option/\>
 #### 搜索过滤条件组件。实现Json化模板渲染下拉框，文本框组，支持自定义渲染，联合查询。
-
+![image](https://github.com/lucyonegit/elements-compnents/blob/master/static/options.jpg)
 
 - ##### Attributes
 prop名称 | 类型
