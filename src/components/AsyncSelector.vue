@@ -13,14 +13,14 @@
   </el-select>
 </template>
 <script>
-import asyncSelector from '../mixins/fetchData'
+import asyncSelector from '../mixins/common'
 export default {
   mixins: [asyncSelector],
   model: {
     prop: 'value',
     event: 'change'
   },
-  props: ['value', 'defaultFetchKey'],
+  props: ['value', 'defaultFetchKey', 'allOption'],
   data () {
     return {
       options: [],
@@ -39,18 +39,44 @@ export default {
       // 触发父组件事件
       this.$emit('onSelect', value)
     },
+    getOptions: async function (newVal) {
+      // 根据一个参数去请求结果，参数用于联动查询
+      this.loading = true
+      let res = await this.fetchOperation(
+        '/data/select',
+        newVal || this.defaultFetchKey
+      )
+      return res
+    },
     showOptions: async function () {
       // 避免第二次再次请求
       let noOptions = this.options.length === 0
       if (noOptions) {
-        this.loading = true
-        let res = await this.fetchOperation(
-          '/data/select',
-          this.defaultFetchKey
-        )
-        this.options = res
-        this.loading = false
+        this.getOptions().then(res => {
+          this.options = res
+          this.loading = false
+        })
       }
+    }
+  },
+  watch: {
+    defaultFetchKey: async function (newVal, oldVal) {
+      console.log('defaultFetchKey changed')
+      let { optionData, connectName } = this.allOption
+      if (connectName !== '') {
+        let optionSelectorIndex = optionData.findIndex((v, k) => {
+          return v.name === connectName
+        })
+        // 修改与之关联的selector的默认搜索选项，作为参数查询options
+        this.$emit('changeDefaultfetch', { optionSelectorIndex, value: newVal })
+      }
+      this.getOptions(newVal).then(res => {
+        this.options = res
+        this.changeValue = res[parseInt(Math.random() * 10)].label
+        // 改变v-model
+        this.$emit('change', res[5].value)
+        this.loading = false
+      })
     }
   }
 }

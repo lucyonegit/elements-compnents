@@ -12,11 +12,13 @@
           @input="onChange"
         ></el-input>
         <AsyncSelector
+          v-if="item.type=='select' && item.async"
+          :allOption="{optionData,connectName:optionData[index].connect || ''}"
           :key="item.key"
           :defaultFetchKey="optionData[index].defaultfetch"
-          v-if="item.type=='select' && item.async"
           v-model="optionData[index].value"
           @onSelect="(value)=>onSelect({connectName:optionData[index].connect || '',index,value})"
+          @changeDefaultfetch="changeDefaultfetch"
         />
         <el-select
           class="inputstyle"
@@ -77,13 +79,14 @@ export default {
   mounted () {},
   methods: {
     onSelect: function ({ connectName, index, value }) {
+      // 当前下拉框选择后，查询与之联动查询的selectorName
       console.log(connectName)
       if (connectName !== '') {
         // 找出对应联合查询的seletorIndex
         let optionSelectorIndex = this.optionData.findIndex((v, k) => {
           return v.name === connectName
         })
-        // 修改对应selector的默认选项
+        // 修改对应selector的默认选项，在AsyncSelector组建中观测defaultfetch改变，作为参数请求另外的selector的options
         this.optionData[optionSelectorIndex].defaultfetch = value
       }
       let data = { ...this.formatData() }
@@ -107,6 +110,10 @@ export default {
     },
     emitEvent: function (res) {
       this.$emit('onSearch', res)
+    },
+    changeDefaultfetch: function ({ optionSelectorIndex, value }) {
+      // 反馈下一个seletor的搜索参数
+      this.optionData[optionSelectorIndex].defaultfetch = value
     }
   }
 }

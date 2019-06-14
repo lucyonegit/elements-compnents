@@ -2,9 +2,9 @@
   <div>
     <Option :option="conf" :extra="extra" @onSearch="onSearch"/>
     <BooleanBtn>
-      <template slot="btnText">弹窗</template>
+      <template slot="btnText">弹窗按钮</template>
       <template slot="default" slot-scope="slotProps">
-        <el-dialog title="提示" :visible="slotProps.status" width="30%">
+        <el-dialog title="提示" :visible="slotProps.status">
           <span>这是一段信息</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="slotProps.clickEvent">取 消</el-button>
