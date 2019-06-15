@@ -8,13 +8,13 @@
 </template>
 <script>
 export default {
-  data: function () {
+  data: function() {
     return {
       status: false
     }
   },
   methods: {
-    clickEvent: function () {
+    clickEvent: function() {
       this.status = !this.status
     }
   }

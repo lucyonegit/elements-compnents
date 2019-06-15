@@ -13,7 +13,7 @@
   </el-select>
 </template>
 <script>
-import asyncSelector from '../mixins/common'
+import asyncSelector from '../mixins/fetchData'
 export default {
   mixins: [asyncSelector],
   model: {

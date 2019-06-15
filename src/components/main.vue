@@ -1,27 +1,16 @@
 <template>
   <div>
     <Option :option="conf" :extra="extra" @onSearch="onSearch"/>
-    <BooleanBtn>
-      <template slot="btnText">弹窗按钮</template>
-      <template slot="default" slot-scope="slotProps">
-        <el-dialog title="提示" :visible="slotProps.status">
-          <span>这是一段信息</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="slotProps.clickEvent">取 消</el-button>
-            <el-button type="primary" @click="()=>{console.log('done')}">确 定</el-button>
-          </span>
-        </el-dialog>
-      </template>
-    </BooleanBtn>
   </div>
 </template>
 
 <script>
 import Option from './Option'
 import BooleanBtn from './BooleanBtn'
+import Func from './func'
 export default {
   components: { Option, BooleanBtn },
-  data () {
+  data() {
     return {
       conf: [
         {
@@ -63,19 +52,27 @@ export default {
     }
   },
   methods: {
-    extra: function (h) {
+    extra: function(h) {
       return (
-        <el-button
-          size="small"
-          type="primary"
-          round={true}
-          onClick={() => console.log(111)}
-        >
-          hello
-        </el-button>
+        <BooleanBtn
+          scopedSlots={{
+            default: function(slotProps) {
+              return (
+                <Func
+                  slotProps={slotProps}
+                  showclose={true}
+                  visible={slotProps.status}
+                />
+              )
+            },
+            btnText: function(props) {
+              return <span>弹窗按钮</span>
+            }
+          }}
+        />
       )
     },
-    onSearch: function (res) {
+    onSearch: function(res) {
       console.log(res)
     }
   }
