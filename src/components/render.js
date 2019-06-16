@@ -10,7 +10,7 @@ export default {
     if (typeof (ctx.props.render) !== 'string') {
       return ctx.props.render(h, ctx.props.rowdata || {})
     } else {
-      return h('span', ctx.props.rowdata.row[ctx.props.dataIndex])
+      return h('span', ctx.props.rowdata[ctx.props.dataIndex])
     }
   }
 }
